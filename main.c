@@ -11,6 +11,6 @@ void main (void) {
 	uart_init();
 
 	while (1) {
-		uart_putstr("ANNO\n");
+		uart_echo();
 	}
 }
