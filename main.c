@@ -8,11 +8,9 @@ void led_init() {
 }
 
 void main (void) {
+	uart_init();
 
 	while (1) {
-		PORTB |= (1 << PORTB0);
-		_delay_ms(500);
-		PORTB &= ~(1 << PORTB0);
-		_delay_ms(500);
+		uart_putstr("ANNO\n");
 	}
 }
