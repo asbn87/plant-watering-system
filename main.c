@@ -4,13 +4,14 @@
 #include "serial.h"
 
 void led_init() {
-	DDRB = (1 << PORTB0);
+	DDRB = (1 << PORTB0 | 1 << PORTB5);
 }
 
 void main (void) {
+	led_init();
 	uart_init();
 
 	while (1) {
-		uart_echo();
+		led_control();
 	}
 }
