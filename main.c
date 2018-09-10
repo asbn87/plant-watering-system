@@ -1,17 +1,19 @@
 #include <avr/io.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 
-#include "serial.h"
+#include <stdio.h>
 
-void led_init() {
-	DDRB = (1 << PORTB0 | 1 << PORTB5);
-}
+#include "led.h"
+#include "serial.h"
+#include "timer.h"
 
 void main (void) {
-	led_init();
 	uart_init();
 
 	while (1) {
-		led_control();
+		/* remove this once you've verified it works */
+		printf_P(PSTR("Hello there\n"));
+		_delay_ms(1000);
 	}
 }

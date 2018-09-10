@@ -6,14 +6,9 @@
 
 void uart_init(void);
 
-void uart_putchar(char chr);
-void uart_putstr(const char *str);
+int uart_putchar(char chr, FILE *stream);
 
 char uart_getchar(void);
-
-void uart_echo(void);
-
-void led_control(void);
 
 #endif
 
