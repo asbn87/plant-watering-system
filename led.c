@@ -2,5 +2,5 @@
 #include "led.h"
 
 void LED_init() {
-	DDRB = (1 << DDB0);
+	DDRD = (1 << DDD6);
 }

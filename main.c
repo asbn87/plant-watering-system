@@ -16,14 +16,17 @@ void main (void) {
 	LED_init();
 
 	while (1) {
-		while(!(TIFR0 & (1 << OCF0A)))
-			;
-		TIFR0 |= (1 << OCF0A);
-
-		if (counter++ == 10){
-			PORTB ^= (1 << PORTB0);
-			counter = 0;
-		}
+		OCR0A = 255;
+		_delay_ms(500);
+		OCR0A = 50;
+		_delay_ms(500);
+		OCR0A = 200;
+		_delay_ms(500);
+		OCR0A = 100;
+		_delay_ms(500);
+		OCR0A = 150;
+		_delay_ms(500);
+		OCR0A = 0;
 	}
 }
 
