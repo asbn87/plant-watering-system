@@ -1,6 +1,6 @@
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-#include <util/delay.h>
 
 #include <stdio.h>
 
@@ -8,25 +8,20 @@
 #include "serial.h"
 #include "timer.h"
 
-void main (void) {
-	uint8_t counter = 0;
+ISR(TIMER2_COMPA_vect) {
+	OCR0A = simple_ramp();
+}
 
+void main (void) {
+
+	LED_init();
 	uart_init();
 	timer_init();
-	LED_init();
+
+	sei();
 
 	while (1) {
-		OCR0A = 255;
-		_delay_ms(500);
-		OCR0A = 50;
-		_delay_ms(500);
-		OCR0A = 200;
-		_delay_ms(500);
-		OCR0A = 100;
-		_delay_ms(500);
-		OCR0A = 150;
-		_delay_ms(500);
-		OCR0A = 0;
+		;
 	}
 }
 
