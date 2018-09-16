@@ -9,11 +9,21 @@
 #include "timer.h"
 
 void main (void) {
+	uint8_t counter = 0;
+
 	uart_init();
+	timer_init();
+	LED_init();
 
 	while (1) {
-		/* remove this once you've verified it works */
-		printf_P(PSTR("Hello there\n"));
-		_delay_ms(1000);
+		while(!(TIFR0 & (1 << OCF0A)))
+			;
+		TIFR0 |= (1 << OCF0A);
+
+		if (counter++ == 10){
+			PORTB ^= (1 << PORTB0);
+			counter = 0;
+		}
 	}
 }
+
