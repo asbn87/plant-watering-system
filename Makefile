@@ -17,7 +17,7 @@ OUT=${BIN}.elf ${BIN}.hex ${BIN}.lss
 SOURCES = \
 		  main.c \
 		  serial.c \
-		  led.c \
+		  gpio.c \
 		  timer.c
 
 OBJS = $(SOURCES:.c=.o)

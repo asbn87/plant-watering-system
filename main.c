@@ -3,18 +3,23 @@
 #include <avr/pgmspace.h>
 #include <stdio.h>
 
-#include "led.h"
+#include "gpio.h"
 #include "serial.h"
 #include "timer.h"
 
+ISR(TIMER2_COMPA_vect) {
+	check_button();
+}
 void main (void) {
 
-	LED_init();
+	gpio_init();
 	uart_init();
 	timer_init();
 
+	sei();
+
 	while (1) {
-		// ...
+
 	}
 }
 
