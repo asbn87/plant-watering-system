@@ -18,6 +18,7 @@ SOURCES = \
 		  main.c \
 		  serial.c \
 		  gpio.c \
+		  adc.c \
 		  timer.c
 
 OBJS = $(SOURCES:.c=.o)

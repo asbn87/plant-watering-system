@@ -5,7 +5,15 @@
 #include "gpio.h"
 
 void gpio_init() {
-	DDRD &= ~(1 << PIND2);
+	/*
+	 * N/O active high button connected to PD2
+	 */
+	DDRD &= ~(1 << DDD2);
+
+	/*
+	 * PD6/OC0A used for PWM'ed LED output
+	 */
+	DDRD |= (1 << DDD6);
 }
 
 void check_button(void) {
@@ -20,6 +28,7 @@ void check_button(void) {
 		prev_btn_state = 0;
 	}
 }
+
 uint8_t simple_ramp() {
 	// ...
 }
