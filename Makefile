@@ -10,7 +10,7 @@ CFLAGS=-Os -Werror -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU}
 LDFLAGS=-mmcu=$(MCU)
 PORT=/dev/ttyACM0
 
-BIN=lab03
+BIN=lab04
 
 OUT=${BIN}.elf ${BIN}.hex ${BIN}.lss
 
@@ -19,7 +19,8 @@ SOURCES = \
 		  serial.c \
 		  gpio.c \
 		  adc.c \
-		  timer.c
+		  timer.c \
+		  i2c.c
 
 OBJS = $(SOURCES:.c=.o)
 
