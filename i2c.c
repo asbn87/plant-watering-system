@@ -132,12 +132,79 @@ void eeprom_write_byte(uint8_t addr, uint8_t data) {
 
 }
 
+void eeprom_write_page(uint8_t *data, uint8_t start_addr, size_t len) {
+	uint8_t *ptr = data;
 
+	i2c_start();
+	i2c_emit_addr(EEPROM_ADDR, I2C_W);
+	i2c_emit_byte(start_addr);
 
-void eeprom_write_page(uint8_t addr, uint8_t *data) {
-	// ... (VG)
+	for (int i = 0; i < len; i++) {
+		i2c_emit_byte(*(ptr++));
+	}
+	i2c_stop();
+
+	eeprom_wait_until_write_complete();
 }
 
-void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, uint8_t len) {
-	// ... (VG)
+void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, size_t len) {
+	uint8_t ix = 0;
+	uint8_t *ptr = buf;
+
+	i2c_start();
+	i2c_emit_addr(EEPROM_ADDR, I2C_W);
+	i2c_emit_byte(start_addr);
+
+	i2c_start();
+	i2c_emit_addr(EEPROM_ADDR, I2C_R);
+
+	do {
+		*(ptr++) = i2c_read_ACK();
+	} while (ix++ < len - 1);
+
+	*ptr = i2c_read_NAK();
+
+	i2c_stop();
+}
+
+void eeprom_erase_memory(void) {
+	uint8_t buf[8] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
+	printf_P(PSTR("Erasing EEPROM\n"));
+	for (uint8_t i=0; i<16; i++) {
+		printf_P(PSTR(" > Erasing %02X-%02X\n"), 8*i, (8*i)+7);
+		eeprom_write_page(buf, 0x08*i, 8);
+	}
+	printf_P(PSTR("Erase complete\n"));
+}
+
+void eeprom_write_buffer(uint8_t *buffer, uint8_t start_addr, size_t len) {
+	uint8_t *data_ptr = buffer;
+	uint8_t addr = start_addr;
+	size_t slice_len = 0;
+	size_t rem_len = len;
+
+	if (addr + len >= 0x80) {
+		printf_P(PSTR("ERROR, trying to write outside available EEPROM space: 0x%02x-0x%02x (0x00-0x80 valid)!\n"),
+				addr, addr+len);
+		return;
+	}
+
+	while (addr < start_addr + len) {
+
+		if (addr % 8 != 0) {
+			slice_len = 8 - (addr % 8);
+		} else {
+			slice_len = 8;
+		}
+
+		if (rem_len < slice_len) {
+			slice_len = rem_len;
+		}
+
+		eeprom_write_page(data_ptr, addr, slice_len);
+
+		addr += slice_len;
+		data_ptr += slice_len;
+		rem_len -= slice_len;
+	}
 }

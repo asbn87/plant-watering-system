@@ -20,7 +20,8 @@ SOURCES = \
 		  gpio.c \
 		  adc.c \
 		  timer.c \
-		  i2c.c
+		  i2c.c \
+		  util.c
 
 OBJS = $(SOURCES:.c=.o)
 

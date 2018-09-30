@@ -29,7 +29,10 @@ void eeprom_wait_until_write_complete(void);
 uint8_t eeprom_read_byte(uint8_t addr);
 void eeprom_write_byte(uint8_t addr, uint8_t data);
 
-void eeprom_write_page(uint8_t addr, uint8_t *data);
-void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, uint8_t len);
+void eeprom_write_page(uint8_t *data, uint8_t start_addr, size_t len);
+void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, size_t len);
+
+void eeprom_erase_memory(void);
+void eeprom_write_buffer(uint8_t *buffer, uint8_t start_addr, size_t len);
 
 #endif // _I2C_H_
