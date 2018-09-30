@@ -19,6 +19,20 @@ void main (void) {
 
 	sei();
 
+	_delay_ms(4000);
+
+	char my_name[] = "Andreas";
+
+	for (uint8_t i=0; i<sizeof(my_name);i++) {
+		eeprom_write_byte(0x10+i, my_name[i]);
+	}
+
+	_delay_ms(1000);
+
+	for (uint8_t i=0; i<sizeof(my_name);i++) {
+		printf("%c", eeprom_read_byte(0x10+i));
+	}
+
 	while (1) {
 
 	}

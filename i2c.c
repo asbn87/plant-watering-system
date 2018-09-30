@@ -107,11 +107,29 @@ inline void eeprom_wait_until_write_complete() {
 }
 
 uint8_t eeprom_read_byte(uint8_t addr) {
-	// ...
+	uint8_t data;
+
+	i2c_start();
+	i2c_emit_addr(EEPROM_ADDR, I2C_W);
+	i2c_emit_byte(addr);
+
+	i2c_start();
+	i2c_emit_addr(EEPROM_ADDR, I2C_R);
+	data = i2c_read_NAK();
+	i2c_stop();
+
+	return data;
 }
 
 void eeprom_write_byte(uint8_t addr, uint8_t data) {
-	// ...
+	i2c_start();
+	i2c_emit_addr(EEPROM_ADDR, I2C_W);
+	i2c_emit_byte(addr);
+	i2c_emit_byte(data);
+	i2c_stop();
+
+	eeprom_wait_until_write_complete();
+
 }
 
 
