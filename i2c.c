@@ -8,7 +8,7 @@
 #include "i2c.h"
 
 void i2c_init(void) {
-	// ...
+	TWBR = I2C_BITRATE;
 }
 
 void i2c_meaningful_status(uint8_t status) {
@@ -54,36 +54,56 @@ void i2c_meaningful_status(uint8_t status) {
 	}
 }
 
+inline void i2c_wait_on_TWINT(void) {
+	while (!(TWCR & (1 << TWINT)))
+		;
+}
+
 inline void i2c_start() {
-	// ...
+	TWCR = (1 << TWSTA | 1 << TWEN | 1 << TWINT);
+	i2c_wait_on_TWINT();
 }
 
 inline void i2c_stop() {
-	// ...
+	TWCR = (1 << TWSTO | 1 << TWEN | 1 << TWINT);
+	_delay_us(50);
 }
 
 inline uint8_t i2c_get_status(void) {
-	// ...
+	return TWSR & 0xF8;
 }
 
-inline void i2c_xmit_addr(uint8_t address, uint8_t rw) {
-	// ...
+inline void i2c_emit_addr(uint8_t address, uint8_t rw) {
+	TWDR = address | rw;
+	TWCR = (1 << TWEN | 1 << TWINT);
+	i2c_wait_on_TWINT();
 }
 
-inline void i2c_xmit_byte(uint8_t data) {
-	// ...
+inline void i2c_emit_byte(uint8_t data) {
+	TWDR = data;
+	TWCR = (1 << TWEN | 1 << TWINT);
+	i2c_wait_on_TWINT();
 }
 
 inline uint8_t i2c_read_ACK() {
-	// ...
+	TWCR = (1 << TWEN | 1 << TWEA | 1 << TWINT);
+	i2c_wait_on_TWINT();
+
+	return TWDR;
 }
 
 inline uint8_t i2c_read_NAK() {
-	// ...
+	TWCR = (1 << TWEN | 1 << TWINT);
+	i2c_wait_on_TWINT();
+
+	return TWDR;
 }
 
 inline void eeprom_wait_until_write_complete() {
-	// ...
+	do {
+		i2c_start();
+		i2c_emit_addr(EEPROM_ADDR, I2C_W);
+	} while (i2c_get_status() != MT_SLA_W_ACK);
 }
 
 uint8_t eeprom_read_byte(uint8_t addr) {
