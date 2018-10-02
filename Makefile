@@ -10,7 +10,7 @@ CFLAGS=-Os -Werror -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU}
 LDFLAGS=-mmcu=$(MCU)
 PORT=/dev/ttyACM0
 
-BIN=lab04
+BIN=lab05
 
 OUT=${BIN}.elf ${BIN}.hex ${BIN}.lss
 
