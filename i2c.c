@@ -208,3 +208,40 @@ void eeprom_write_buffer(uint8_t *buffer, uint8_t start_addr, size_t len) {
 		rem_len -= slice_len;
 	}
 }
+
+uint8_t soilsensor_read_byte(uint8_t addr) {
+	uint8_t data;
+
+	i2c_start();
+	i2c_emit_addr(SOILSENSOR_ADDR, I2C_W);
+	i2c_emit_byte(addr);
+
+	i2c_start();
+	i2c_emit_addr(SOILSENSOR_ADDR, I2C_R);
+	data = i2c_read_NAK();
+	i2c_stop();
+
+	return data;
+}
+
+void soilsensor_read(uint8_t *buf, uint8_t start_addr, size_t len) {
+	uint8_t ix = 0;
+	uint8_t *ptr = buf;
+
+	i2c_start();
+	i2c_emit_addr(SOILSENSOR_ADDR, I2C_W);
+
+	i2c_emit_byte(start_addr);
+
+	i2c_start();
+	i2c_emit_addr(SOILSENSOR_ADDR, I2C_R);
+
+	do {
+		*(ptr++) = i2c_read_ACK();
+	} while (ix++ < len - 1);
+
+	*ptr = i2c_read_NAK();
+
+	i2c_stop();
+	_delay_us(50);
+}

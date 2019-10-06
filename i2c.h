@@ -5,6 +5,7 @@
 #define I2C_BITRATE ((F_CPU / I2C_FREQ) - 16) / 2 + 1
 
 #define EEPROM_ADDR 0xA0
+#define SOILSENSOR_ADDR 0x36
 
 #define MT_SLA_W_ACK 0x18
 
@@ -34,5 +35,8 @@ void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, size_t len);
 
 void eeprom_erase_memory(void);
 void eeprom_write_buffer(uint8_t *buffer, uint8_t start_addr, size_t len);
+
+void soilsensor_read(uint8_t *buf, uint8_t start_addr, size_t len);
+uint8_t soilsensor_read_byte(uint8_t addr);
 
 #endif // _I2C_H_
