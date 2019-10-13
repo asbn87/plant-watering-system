@@ -66,7 +66,7 @@ inline void i2c_start() {
 
 inline void i2c_stop() {
 	TWCR = (1 << TWSTO | 1 << TWEN | 1 << TWINT);
-	_delay_us(50);
+	_delay_us(1000); // Recommended delay from adafruit
 }
 
 inline uint8_t i2c_get_status(void) {
@@ -209,39 +209,22 @@ void eeprom_write_buffer(uint8_t *buffer, uint8_t start_addr, size_t len) {
 	}
 }
 
-uint8_t soilsensor_read_byte(uint8_t addr) {
-	uint8_t data;
-
-	i2c_start();
-	i2c_emit_addr(SOILSENSOR_ADDR, I2C_W);
-	i2c_emit_byte(addr);
-
-	i2c_start();
-	i2c_emit_addr(SOILSENSOR_ADDR, I2C_R);
-	data = i2c_read_NAK();
-	i2c_stop();
-
-	return data;
-}
-
-void soilsensor_read(uint8_t *buf, uint8_t start_addr, size_t len) {
+void soilsensor_read_moisture(uint8_t *buf, uint8_t regHigh, uint8_t regLow, uint8_t len) {
 	uint8_t ix = 0;
 	uint8_t *ptr = buf;
 
 	i2c_start();
-	i2c_emit_addr(SOILSENSOR_ADDR, I2C_W);
+	i2c_emit_addr((SOILSENSOR_ADDR << 1), I2C_W);
 
-	i2c_emit_byte(start_addr);
+	i2c_emit_byte(regHigh); // Module base address
+	i2c_emit_byte(regLow); // Function address
 
 	i2c_start();
-	i2c_emit_addr(SOILSENSOR_ADDR, I2C_R);
+	i2c_emit_addr((SOILSENSOR_ADDR << 1), I2C_R);
 
 	do {
 		*(ptr++) = i2c_read_ACK();
-	} while (ix++ < len - 1);
-
-	*ptr = i2c_read_NAK();
+	} while (ix++ < 1);
 
 	i2c_stop();
-	_delay_us(50);
 }

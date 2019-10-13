@@ -31,4 +31,3 @@ char uart_getchar(void) {
 		;
 	return UDR0;
 }
-

@@ -21,8 +21,7 @@ SOURCES = \
 		  adc.c \
 		  timer.c \
 		  i2c.c \
-		  util.c \
-		  motor.c
+		  util.c
 
 OBJS = $(SOURCES:.c=.o)
 

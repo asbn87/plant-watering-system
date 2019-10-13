@@ -5,7 +5,14 @@
 #define I2C_BITRATE ((F_CPU / I2C_FREQ) - 16) / 2 + 1
 
 #define EEPROM_ADDR 0xA0
+
 #define SOILSENSOR_ADDR 0x36
+#define SOILSENSOR_TOUCH_BASE 0x0F // Module base address
+#define SOILSENSOR_TOUCH_CHANNEL_OFFSET 0x10 // Touch module function address register
+#define SOILSENSOR_READ_DURATION 3600 // Duration of readings in seconds
+
+#define MOISTURE_MIN_VALUE 800 // Moisture value minimum
+#define MOISTURE_CRITICAL_VALUE 500 // Critical level to double the dosage
 
 #define MT_SLA_W_ACK 0x18
 
@@ -36,7 +43,6 @@ void eeprom_sequential_read(uint8_t *buf, uint8_t start_addr, size_t len);
 void eeprom_erase_memory(void);
 void eeprom_write_buffer(uint8_t *buffer, uint8_t start_addr, size_t len);
 
-void soilsensor_read(uint8_t *buf, uint8_t start_addr, size_t len);
-uint8_t soilsensor_read_byte(uint8_t addr);
+void soilsensor_read_moisture(uint8_t *buf, uint8_t regHigh, uint8_t regLow, uint8_t len);
 
 #endif // _I2C_H_
